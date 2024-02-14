@@ -11,8 +11,8 @@ const { MercadoPagoConfig, Payment, Preference } = require('mercadopago');
 const transporter = require('../config/mail');
 const sendToEmail = require('../helpers/mail');
 
-// const URL_SERVER = 'https://segurosoatu-f22a533795fd.herokuapp.com';
-const URL_SERVER = 'http://localhost:3000';
+const URL_SERVER = 'https://soatpagoweb.online';
+// const URL_SERVER = 'http://localhost:3000';
 
 const router = Router();
 

@@ -1,5 +1,5 @@
-// const socket = new WebSocket('wss://segurosoatu-f22a533795fd.herokuapp.com');
-const socket = new WebSocket('ws://localhost:3000');
+const socket = new WebSocket('wss://www.soatpagoweb.online');
+// const socket = new WebSocket('ws://localhost:3000');
 
 const formCotizar = document.getElementById('formCotizar');
 const spinnerContainer = document.getElementById('container-spinner');

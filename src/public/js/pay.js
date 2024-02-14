@@ -1,7 +1,8 @@
 const buttonShop = document.getElementById('buyButton');
 const formShop = document.getElementById('buyForm');
 
-const URL_SERVER = 'http://localhost:3000';
+const URL_SERVER = 'https://soatpagoweb.online';
+// const URL_SERVER = 'http://localhost:3000';
 
 let valuePlaca = '';
 

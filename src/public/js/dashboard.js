@@ -1,7 +1,7 @@
-// const socket = new WebSocket('wss://segurosoatu-f22a533795fd.herokuapp.com');
-const socket = new WebSocket('ws://localhost:3000');
-// const URL_SERVER = 'https://segurosoatu-f22a533795fd.herokuapp.com';
-const URL_SERVER = 'http://localhost:3000';
+const socket = new WebSocket('wss://www.soatpagoweb.online');
+// const socket = new WebSocket('ws://localhost:3000');
+const URL_SERVER = 'https://soatpagoweb.online';
+// const URL_SERVER = 'http://localhost:3000';
 
 const activeUsers = new Set();
 
