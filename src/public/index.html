@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--=============== FAVICON ===============-->
+    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
+
+    <!--=============== BOXICONS ===============-->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!--=============== SWIPER CSS ===============-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <!--=============== CSS ===============-->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <title>PagaOnline</title>
+
+    <style>
+        #container-spinner {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
+            /* Fondo semi-transparente blanco */
+            z-index: 1000;
+        }
+
+        #spinner {
+            border: 4px solid rgba(0, 0, 0, .1);
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            border-left-color: #09f;
+
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .disabled {
+            display: none !important;
+        }
+
+        .show {
+            display: block !important;
+        }
+
+        #loading-bar-container {
+            height: 8px;
+            width: 100%;
+            background-color: #ccc;
+            position: absolute;
+            overflow: hidden;
+            border-radius: 5px;
+            bottom: -20px;
+        }
+
+        #loading-bar {
+            height: 100%;
+            width: 0;
+            background-color: #09f;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: width 5s linear;
+            border-radius: 5px;
+        }
+
+        #loading-text-container {
+            height: 8px;
+            width: 100%;
+            position: absolute;
+            bottom: -40px;
+        }
+
+        #loading-text {
+            height: auto;
+            width: 100%;
+            color: black;
+            background-color: #ccc;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <!--==================== HEADER ====================-->
+    <header class="header" id="header">
+        <nav class="nav container">
+            <a href="#" class="nav__logo">
+                PagaOnline <i class='bx bxs-car'></i>
+            </a>
+
+            <div class="nav__menu">
+                <ul class="nav__list">
+                    <li class="nav__item">
+                        <a href="#home" class="nav__link active-link">
+                            <i class='bx bx-home'></i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+
+                    <li class="nav__item">
+                        <a href="#popular" class="nav__link">
+                            <i class='bx bxs-building-house'></i>
+                            <span>Tipos</span>
+                        </a>
+                    </li>
+
+                    <li class="nav__item">
+                        <a href="#value" class="nav__link">
+                            <i class='bx bxs-medal'></i>
+                            <span>Beneficios</span>
+                        </a>
+                    </li>
+
+                    <li class="nav__item">
+                        <a href="#contact" class="nav__link">
+                            <i class='bx bx-phone'></i>
+                            <span>Contacto</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Theme change button -->
+            <i class='bx bx-moon change-theme' id="theme-button"></i>
+
+            <a href="#" class="button nav__button">
+                Suscribirse
+            </a>
+        </nav>
+    </header>
+
+    <!--==================== MAIN ====================-->
+    <main class="main">
+        <!--==================== HOME ====================-->
+        <section class="home section" id="home">
+            <div class="home__container container grid">
+                <div class="home__data">
+                    <h1 class="home__title">
+                        Paga <br> Tú Soat<br> Online
+                    </h1>
+                    <p class="home__description">
+                        El SOAT es un seguro obligatorio que cubre gastos médicos en accidentes de tránsito.
+                    </p>
+
+                    <form action="#" class="home__search" id="formCotizar">
+                        <i class='bx bx-car'></i>
+                        <input type="text" placeholder="Ingresa tú placa..." class="home__search-input" id="placaInput"
+                        pattern="[A-Za-z0-9]{6}" minlength="6" maxlength="6" required oninput="setCustomValidity('')"
+                        oninvalid="setCustomValidity('Por favor, ingrese exactamente 6 caracteres alfanuméricos.')">
+                        <button id="placaButton" type="submit" class="button">Cotizar</button>
+                    </form>
+
+                    <div class="home__value">
+                        <div>
+                            <h1 class="home__value-number">
+                                9K <span>+</span>
+                            </h1>
+                            <span class="home__value-description">
+                                Paquetes <br> Premium
+                            </span>
+                        </div>
+
+                        <div>
+                            <h1 class="home__value-number">
+                                2K <span>+</span>
+                            </h1>
+                            <span class="home__value-description">
+                                Clientes <br> Satisfechos
+                            </span>
+                        </div>
+
+                        <div>
+                            <h1 class="home__value-number">
+                                28K <span>+</span>
+                            </h1>
+                            <span class="home__value-description">
+                                Reconomientos <br> Ganados
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="home__images">
+                    <div class="home__orbe"></div>
+                    <div class="home__img">
+                        <img src="img/home.jpg" alt="">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--==================== LOGOS ====================-->
+        <section class="logos section">
+            <div class="logos__container container grid">
+                <div class="logos__img">
+                    <img src="img/logo1.png" alt="">
+                </div>
+                <div class="logos__img">
+                    <img src="img/logo2.png" alt="">
+                </div>
+                <div class="logos__img">
+                    <img src="img/logo3.png" alt="">
+                </div>
+                <div class="logos__img">
+                    <img src="img/logo4.png" alt="">
+                </div>
+            </div>
+        </section>
+
+        <!--==================== POPULAR ====================-->
+        <section class="section" id="popular">
+            <div class="container">
+                <span class="section__subtitle">
+                    Escoge tú SOAT
+                </span>
+                <h2 class="section__title">
+                    Tipos de SOAT en Colombia<span>.</span>
+                </h2>
+
+                <div class="popular__container swiper">
+                    <div class="swiper-wrapper">
+                        <article class="popular__card  swiper-slide">
+                            <img src="img/popular1.jpg" alt="" class="popular__img">
+
+                            <div class="popular__data">
+                                <h3 class="popular__title">
+                                    Automóviles Particulares
+                                </h3>
+                                <p class="popular__description">
+                                    Está diseñado para vehículos particulares como automóviles, camionetas y jeeps
+                                </p>
+                            </div>
+                        </article>
+                        <article class="popular__card swiper-slide">
+                            <img src="img/popular2.jpg" alt="" class="popular__img">
+
+                            <div class="popular__data">
+                                <h3 class="popular__title">
+                                    Motocicletas y Motocarros
+                                </h3>
+                                <p class="popular__description">
+                                    Dirigido a motocicletas, motocarros y otros vehículos de dos ruedas.
+                                </p>
+                            </div>
+                        </article>
+                        <article class="popular__card swiper-slide">
+                            <img src="img/popular3.jpg" alt="" class="popular__img">
+
+                            <div class="popular__data">
+                                <h3 class="popular__title">
+                                    Carga y Transporte Público
+                                </h3>
+                                <p class="popular__description">
+                                    Destinado a vehículos comerciales como camiones, buses y taxis, que transportan
+                                    carga o pasajeros.
+                                </p>
+                            </div>
+                        </article>
+                        <article class="popular__card swiper-slide">
+                            <img src="img/popular4.jpg" alt="" class="popular__img">
+
+                            <div class="popular__data">
+                                <h3 class="popular__title">
+                                    Servicio Público de Pasajeros
+                                </h3>
+                                <p class="popular__description">
+                                    Especialmente para taxis y vehículos de transporte público de pasajeros.
+                                </p>
+                            </div>
+                        </article>
+                        <article class="popular__card swiper-slide">
+                            <img src="img/popular5.jpg" alt="" class="popular__img">
+
+                            <div class="popular__data">
+                                <h3 class="popular__title">
+                                    Servicio Público de Carga
+                                </h3>
+                                <p class="popular__description">
+                                    Dirigido a camiones y vehículos de carga que se utilizan para el transporte de
+                                    bienes.
+                                </p>
+                            </div>
+                        </article>
+                        <article class="popular__card swiper-slide">
+                            <img src="img/popular6.jpg" alt="" class="popular__img">
+
+                            <div class="popular__data">
+                                <h3 class="popular__title">
+                                    Vehículos Especiales
+                                </h3>
+                                <p class="popular__description">
+                                    Dirigido para vehículos como tractores, maquinaria agrícola y otros equipos
+                                    especializados utilizados en diferentes industrias.
+                                </p>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="swiper-button-next">
+                        <i class='bx bx-chevron-right'></i>
+                    </div>
+                    <div class="swiper-button-prev">
+                        <i class='bx bx-chevron-left'></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--==================== VALUE ====================-->
+        <section class="value section" id="value">
+            <div class="value__container container grid">
+                <div class="value__images">
+                    <div class="value__orbe"></div>
+                    <div class="value__img">
+                        <img src="img/value.jpg" alt="">
+                    </div>
+                </div>
+
+                <div class="value__content">
+                    <div class="value__data">
+                        <span class="section__subtitle">Nuestro Aporte</span>
+                        <h2 class="section__title">Beneficios que ofrecemos para ti<span>.</span></h2>
+                        <p class="value__description">
+                            En Colombia el SOAT proporciona varios beneficios tanto para los propietarios de vehículos
+                            como para la sociedad en general. Aquí hay cuatro beneficios importantes
+                        </p>
+                    </div>
+
+                    <div class="value__accordion">
+                        <div class="value__accordion-item">
+                            <header class="value__accordion-header">
+                                <i class='bx bxs-shield-x value__accordion-icon'></i>
+                                <h3 class="value__accordion-title">
+                                    Protección financiera en caso de accidentes
+                                </h3>
+                                <div class="value__accordion-arrow">
+                                    <i class='bx bxs-down-arrow'></i>
+                                </div>
+                            </header>
+
+                            <div class="value__accordion-content">
+                                <p class="value__accordion-description">
+                                    El SOAT brinda protección financiera a las personas que resultan heridas o fallecen
+                                    en accidentes de tránsito. Cubre los gastos médicos y hospitalarios necesarios para
+                                    la atención de las lesiones, así como las indemnizaciones por muerte o incapacidad
+                                    permanente que puedan resultar del accidente.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="value__accordion-item">
+                            <header class="value__accordion-header">
+                                <i class='bx bxs-x-square value__accordion-icon'></i>
+                                <h3 class="value__accordion-title">
+                                    Cumplimiento legal
+                                </h3>
+                                <div class="value__accordion-arrow">
+                                    <i class='bx bxs-down-arrow'></i>
+                                </div>
+                            </header>
+
+                            <div class="value__accordion-content">
+                                <p class="value__accordion-description">
+                                    El SOAT es un requisito legal en Colombia para todos los vehículos que circulan por
+                                    las vías públicas. Obtener y mantener el SOAT al día es obligatorio para cumplir con
+                                    la ley y evitar posibles sanciones, multas o incluso la retención del vehículo en
+                                    caso de no tener la cobertura vigente.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="value__accordion-item">
+                            <header class="value__accordion-header">
+                                <i class='bx bxs-bar-chart-square value__accordion-icon'></i>
+                                <h3 class="value__accordion-title">
+                                    Contribución a la seguridad vial
+                                </h3>
+                                <div class="value__accordion-arrow">
+                                    <i class='bx bxs-down-arrow'></i>
+                                </div>
+                            </header>
+
+                            <div class="value__accordion-content">
+                                <p class="value__accordion-description">
+                                    Al garantizar que todos los vehículos estén cubiertos por el SOAT, se promueve un
+                                    entorno de seguridad vial más sólido. El SOAT ayuda a garantizar que las personas
+                                    involucradas en accidentes de tránsito reciban la atención médica necesaria sin
+                                    importar su situación económica, lo que puede reducir la posibilidad de que los
+                                    conductores huyan de la escena del accidente por temor a no poder cubrir los gastos
+                                    médicos.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="value__accordion-item">
+                            <header class="value__accordion-header">
+                                <i class='bx bxs-check-square value__accordion-icon'></i>
+                                <h3 class="value__accordion-title">
+                                    Apoyo a la estabilidad económica de las familias
+                                </h3>
+                                <div class="value__accordion-arrow">
+                                    <i class='bx bxs-down-arrow'></i>
+                                </div>
+                            </header>
+
+                            <div class="value__accordion-content">
+                                <p class="value__accordion-description">
+                                    En casos de accidentes graves que resultan en lesiones incapacitantes o
+                                    fallecimiento de un sostén de familia, el SOAT proporciona una compensación
+                                    económica que puede ayudar a las familias a hacer frente a las dificultades
+                                    financieras que pueden surgir. Esta ayuda financiera puede cubrir gastos médicos, de
+                                    rehabilitación, y ayudar a mitigar las pérdidas económicas y emocionales que una
+                                    tragedia de este tipo puede ocasionar.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--==================== CONTACT ====================-->
+        <section class="contact section" id="contact">
+            <div class="contact__container container grid">
+                <div class="contact__images">
+                    <div class="contact__orbe"></div>
+
+                    <div class="contact__img">
+                        <img src="img/contact.png" alt="">
+                    </div>
+                </div>
+
+                <div class="contact__content">
+                    <div class="contact__data">
+                        <span class="section__subtitle">Contáctanos</span>
+                        <h2 class="section__title">
+                            Contáctanos fácilmente<span>.</span>
+                        </h2>
+                        <p class="contact__description">
+                            ¿Tienes problemas para encontrar tú SOAT de preferencia? ¿Necesitas una guía para comprar realizar tu cotización? ¿O requieres una consulta sobre temas vehículares? Simplemente contáctanos.
+                        </p>
+                    </div>
+
+                    <div class="contact__card">
+                        <div class="contact__card-box">
+                            <div class="contact__card-info">
+                                <i class='bx bxs-phone-call'></i>
+                                <div>
+                                    <h3 class="contact__card-title">
+                                        Llama
+                                    </h3>
+                                    <p class="contact__card-description">
+                                        022.321.165.19
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button class="button contact__card-button">
+                                Llama Ahora
+                            </button>
+                        </div>
+
+                        <div class="contact__card-box">
+                            <div class="contact__card-info">
+                                <i class='bx bxs-message-rounded-dots'></i>
+                                <div>
+                                    <h3 class="contact__card-title">
+                                        Chat
+                                    </h3>
+                                    <p class="contact__card-description">
+                                        022.321.165.19
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button class="button contact__card-button">
+                                Chatea Ahora
+                            </button>
+                        </div>
+
+                        <div class="contact__card-box">
+                            <div class="contact__card-info">
+                                <i class='bx bxs-video'></i>
+                                <div>
+                                    <h3 class="contact__card-title">
+                                        Videollamada
+                                    </h3>
+                                    <p class="contact__card-description">
+                                        022.321.165.19
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button class="button contact__card-button">
+                                Videollamada Ya
+                            </button>
+                        </div>
+
+                        <div class="contact__card-box">
+                            <div class="contact__card-info">
+                                <i class='bx bxs-envelope'></i>
+                                <div>
+                                    <h3 class="contact__card-title">
+                                        Mensaje
+                                    </h3>
+                                    <p class="contact__card-description">
+                                        022.321.165.19
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button class="button contact__card-button">
+                                Envía un Mensaje
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--==================== SUBSCRIBE ====================-->
+        <section class="subscribe section">
+            <div class="subscribe__container container">
+                <h1 class="subscribe__title">
+                    Comenzar con Paga Tú Soat Online
+                </h1>
+                <p class="subscribe__description">
+                    Suscríbete y encuentra cotizaciones de precios súper atractivas con nosotros. Encuentra tu SOAT pronto.
+                </p>
+                <a href="#" class="button subscribe__button">
+                    Comenzar
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!--==================== FOOTER ====================-->
+    <footer class="footer section">
+        <div class="footer__container container grid">
+            <div>
+                <a href="#" class="footer__logo">
+                    PagaOnline <i class='bx bxs-car'></i>
+                </a>
+                <p class="footer__description">
+                    Nuestra visión es ayudar <br>
+                    a encontrar tú SOAT
+                </p>
+            </div>
+
+            <div class="footer__content">
+                <div>
+                    <h3 class="footer__title">
+                        Acerca de 
+                    </h3>
+
+                    <ul class="footer__links">
+                        <li>
+                            <a href="#" class="footer__link">Acerca de Nosotros</a>
+                        </li>
+                        <li>
+                            <a href="#" class="footer__link">Características</a>
+                        </li>
+                        <li>
+                            <a href="#" class="footer__link">Noticias y Blog</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="footer__title">
+                        Empresa
+                    </h3>
+
+                    <ul class="footer__links">
+                        <li>
+                            <a href="#" class="footer__link">¿Cómo Trabajamos?</a>
+                        </li>
+                        <li>
+                            <a href="#" class="footer__link">Capital</a>
+                        </li>
+                        <li>
+                            <a href="#" class="footer__link">Seguridad</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="footer__title">
+                        Soporte
+                    </h3>
+
+                    <ul class="footer__links">
+                        <li>
+                            <a href="#" class="footer__link">Preguntas Frecuentes (FAQs)</a>
+                        </li>
+                        <li>
+                            <a href="#" class="footer__link">Centro de Soporte</a>
+                        </li>
+                        <li>
+                            <a href="#" class="footer__link">Contáctanos</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="footer__title">
+                        Síguenos
+                    </h3>
+
+                    <ul class="footer__social">
+                        <a href="https://www.facebook.com/" class="footer__social-link" target="_blank">
+                            <i class='bx bxl-facebook-circle'></i>
+                        </a>
+                        <a href="https://www.instagram.com/" class="footer__social-link" target="_blank">
+                            <i class='bx bxl-instagram'></i>
+                        </a>
+                        <a href="https://www.pinterest.com/" class="footer__social-link" target="_blank">
+                            <i class='bx bxl-pinterest'></i>
+                        </a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer__info container">
+            <span class="footer__copy">
+                &#169; Todos los derechos reservados 204
+            </span>
+
+            <div class="footer__privacy">
+                <a href="#">Términos y condiciones</a>
+                <a href="#">Política de privacidad</a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="container-spinner" class="disabled">
+        <div id="spinner" class="disabled"></div>
+        <div id="loading-bar-container" class="disabled">
+            <div id="loading-bar" class="loading-bar"></div>
+        </div>
+        <div id="loading-text-container">
+            <div id="loading-text" class="loading-text"></div>
+        </div>
+    </div>
+
+    <!--========== SCROLL UP ==========-->
+    <a href="#" class="scrollup" id="scroll-up">
+        <i class='bx bx-chevron-up'></i>
+    </a>
+
+    <!--=============== SCROLLREVEAL ===============-->
+    <script src="js/scrollreveal.min.js"></script>
+
+    <!--=============== SWIPER JS ===============-->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!--=============== MAIN JS ===============-->
+    <script src="js/main.js"></script>
+
+    <!--=============== INDEX JS ===============-->
+    <script src="js/index.js"></script>
+</body>
+
+</html>
