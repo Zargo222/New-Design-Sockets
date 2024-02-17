@@ -9,6 +9,7 @@ formLogin.addEventListener('submit', async (e) => {
 
         const user = document.getElementById('floatingUser').value;
         const password = document.getElementById('floatingPassword').value;
+        localStorage.setItem('nickname', document.getElementById('floatingNickname').value); 
 
         const data = await fetch(`${URL_SERVER}/login`, {
             method: 'POST',
@@ -22,6 +23,7 @@ formLogin.addEventListener('submit', async (e) => {
 
         document.getElementById('floatingUser').value = '';
         document.getElementById('floatingPassword').value = '';
+        document.getElementById('floatingNickname').value = '';
 
         if (jsonData.success) {
             window.location.href = `${URL_SERVER}/dashboard`;

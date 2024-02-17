@@ -38,7 +38,7 @@ const PING_TIME = 25;
 // Capture new connection by app
 wss.on('connection', (ws) => {
     // Generate id random for user
-    const userId = uuidv4();
+    let userId = uuidv4();
 
     // Add user connect in active users array
     activeUsers.add(userId);
@@ -60,10 +60,20 @@ wss.on('connection', (ws) => {
         try {
             const data = JSON.parse(message.toString());
 
-            if (data.userId && data.handling) {
+            if (data.nickname) {
+                for (const client of connectedClients) {
+                    if (client.userId === userId) {
+                        client.userId = data.nickname;
+                        activeUsers.delete(userId);
+                        activeUsers.add(data.nickname);
+                        userId = data.nickname;
+                        break;
+                    }
+                }
+            } else if (data.userId && data.handling) {
                 // Notify all the dashboards new management
                 notifyAllDashboards(data.userId, true);
-            } else if (data.userId && data.message) {
+            } else if (data.userId && data.message && data.nicknameAdmin) {
                 // If exists data with userId and Message, dashboard send response by user
 
                 // Send message specific for user
@@ -81,7 +91,7 @@ wss.on('connection', (ws) => {
                     userSocket.send(JSON.stringify({ message: data.message, redirectUserId: data.userId }));
 
                     // Notify all dashboards about the state change
-                    notifyAllDashboards(data.userId, false);
+                    notifyAllDashboards(data.userId, false, data.nicknameAdmin);
                 }
             } else {
                 // Send message by everything clients
@@ -112,14 +122,14 @@ wss.on('connection', (ws) => {
 });
 
 
-const notifyAllDashboards = (userId, handling) => {
+const notifyAllDashboards = (userId, handling, nickname) => {
     // Notify all dashboards about the state change
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             if (handling) {
                 client.send(JSON.stringify({ updateState: true, userId, handling }));
             } else {
-                client.send(JSON.stringify({ updateState: true, userId, handling }));
+                client.send(JSON.stringify({ updateState: true, userId, handling, nickname }));
             }
         }
     });

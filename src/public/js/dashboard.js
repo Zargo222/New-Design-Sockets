@@ -48,8 +48,8 @@ socket.onmessage = (event) => {
     if (data.updateState && data.handling) {
         // Si hay una actualización de estado, deshabilita el botón para la placa específica
         updatePlateState(data.userId, false, true);
-    } else if (data.updateState && !data.handling) {
-        updatePlateState(data.userId, false, false);
+    } else if (data.updateState && !data.handling && data.nickname) {
+        updatePlateState(data.userId, false, false, data.nickname);
     } else if (data.activeUsers) {
         // Actualizar la lista de usuarios activos
         activeUsers.clear();
@@ -84,6 +84,7 @@ const addNewPlate = (placa) => {
             <span id="handlingIcon_${placa.userId}" class="handling-icon disabled">
                 <i class="fas fa-spinner fa-spin"></i>
             </span>
+            <span id="nickname_${placa.userId}" class="margin-left"></span>
         </td>
     `;
 
@@ -103,19 +104,24 @@ const sendMessage = (userId) => {
 }
 
 const sendMessageForPlate = (userId) => {
+    const nickname = localStorage.getItem('nickname'); 
     const message = prompt('Ingrese su mensaje:');
 
     if (message) {
         // Send message to server with userId
-        socket.send(JSON.stringify({ userId, message, handling: false }));
+        socket.send(JSON.stringify({ userId, message, handling: false, nicknameAdmin: nickname }));
     }
 }
 
-const updatePlateState = (userId, newState, handling) => {
+const updatePlateState = (userId, newState, handling, nickname = '') => {
     const plateRow = document.querySelector(`#platesTable tbody tr[data-state="${userId}"]`);
 
     if (plateRow.querySelector('button').disabled === true) {
         return;
+    }
+
+    if (nickname !== '') {
+        document.getElementById(`nickname_${userId}`).textContent = nickname;
     }
 
     if (handling === false) {
@@ -264,3 +270,9 @@ const updateMethodsPayment = async () => {
         console.error('Error updated email', error);
     }
 }
+
+// Evento que se dispara cuando la conexión WebSocket está abierta
+socket.onopen = () => {
+    const nickname = localStorage.getItem('nickname'); 
+    socket.send(JSON.stringify({ nickname }));
+};
