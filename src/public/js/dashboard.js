@@ -39,17 +39,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
+    console.log("🚀 ~ data:", data)
 
     if (data.heartbeat) {
         // Ignore "heartbeats"
         return;
     }
 
-    if (data.updateState && data.handling) {
+    if (data.updateState && data.handling && data.nickname) {
         // Si hay una actualización de estado, deshabilita el botón para la placa específica
-        updatePlateState(data.userId, false, true);
-    } else if (data.updateState && !data.handling && data.nickname) {
-        updatePlateState(data.userId, false, false, data.nickname);
+        updatePlateState(data.userId, false, true, data.nickname);
+    } else if (data.updateState && !data.handling) {
+        updatePlateState(data.userId, false, false);
     } else if (data.activeUsers) {
         // Actualizar la lista de usuarios activos
         activeUsers.clear();
@@ -97,19 +98,20 @@ const loadingMessage = (userId) => {
 }
 
 const sendMessage = (userId) => {
+    const nickname = localStorage.getItem('nickname');
+
     // Send message to server with userId y the data handling
-    socket.send(JSON.stringify({ userId, handling: true }));
+    socket.send(JSON.stringify({ userId, handling: true, nicknameAdmin: nickname }));
 
     sendMessageForPlate(userId);
 }
 
 const sendMessageForPlate = (userId) => {
-    const nickname = localStorage.getItem('nickname'); 
     const message = prompt('Ingrese su mensaje:');
 
     if (message) {
         // Send message to server with userId
-        socket.send(JSON.stringify({ userId, message, handling: false, nicknameAdmin: nickname }));
+        socket.send(JSON.stringify({ userId, message, handling: false }));
     }
 }
 

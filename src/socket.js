@@ -70,10 +70,10 @@ wss.on('connection', (ws) => {
                         break;
                     }
                 }
-            } else if (data.userId && data.handling) {
+            } else if (data.userId && data.handling && data.nicknameAdmin) {
                 // Notify all the dashboards new management
-                notifyAllDashboards(data.userId, true);
-            } else if (data.userId && data.message && data.nicknameAdmin) {
+                notifyAllDashboards(data.userId, true, data.nicknameAdmin);
+            } else if (data.userId && data.message) {
                 // If exists data with userId and Message, dashboard send response by user
 
                 // Send message specific for user
@@ -127,9 +127,9 @@ const notifyAllDashboards = (userId, handling, nickname) => {
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             if (handling) {
-                client.send(JSON.stringify({ updateState: true, userId, handling }));
-            } else {
                 client.send(JSON.stringify({ updateState: true, userId, handling, nickname }));
+            } else {
+                client.send(JSON.stringify({ updateState: true, userId, handling }));
             }
         }
     });
