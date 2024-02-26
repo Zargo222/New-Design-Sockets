@@ -72,6 +72,55 @@
             <tbody></tbody>
         </table>
 
+        <h2 class="mt-5">Método de Pago del Usuario</h2>
+
+        <hr>
+
+        <form id="userPaymentMethod" class="mb-5">
+            <div class="row">
+                <div class="form-check form-switch col-xs-12 mx-auto">
+                    <input class="form-check-input" type="checkbox" role="switch" id="withMercadoPago">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">¿Con Mercado Pago?</label>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 mt-3">
+                <button class="btn btn-primary" type="submit">Actualizar Método Pago Usuario</button>
+            </div>
+        </form>
+
+        <h2>Gestión de Links</h2>
+
+        <hr class="mb-5">
+
+        <form id="linksForm" class="mb-5">
+            <div class="mb-3">
+                <label for="valueLink" class="form-label">Valor del link</label>
+                <input type="text" class="form-control" id="valueLink" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="link" class="form-label">Link</label>
+                <input type="text" class="form-control" id="link" required>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary" type="submit">Crear link</button>
+            </div>
+        </form>
+
+        <table id="linksTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Valor del link</th>
+                    <th>Link</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
         <h2 class="mt-5">Gestión de Token Mercado Pago</h2>
 
         <hr class="mb-5">

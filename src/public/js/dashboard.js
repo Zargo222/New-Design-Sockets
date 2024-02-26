@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadTokenMercadoPago();
     await loadEmail();
     await loadMethodsPayment();
+    await getLinks();
+    await getSetting();
 
     document.getElementById('tokenForm').addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -35,11 +37,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         await updateMethodsPayment();
         await loadMethodsPayment();
     });
+
+    document.getElementById('linksForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        await createLink();
+        await getLinks();
+    })
+
+    document.getElementById('userPaymentMethod').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        await updateSetting();
+        await getSetting();
+    })
 });
 
 socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
-    console.log("🚀 ~ data:", data)
 
     if (data.heartbeat) {
         // Ignore "heartbeats"
@@ -269,12 +282,110 @@ const updateMethodsPayment = async () => {
             body: JSON.stringify({ ticket: checkedTicker, atm: checkedAtm, credit_card: checkedCreditCard, debit_card: checkedDebitCard, prepaid_card: checkedPrepaidCard, bank_transfer: checkedBankTransfer })
         })
     } catch (error) {
-        console.error('Error updated email', error);
+        console.error('Error updated methods payments', error);
+    }
+}
+
+const createLink = async () => {
+    try {
+        const valueLink = document.getElementById('valueLink').value;
+        const link = document.getElementById('link').value;
+
+        await fetch(`${URL_SERVER}/links`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ link, valueLink })
+        })
+
+        document.getElementById('valueLink').value = '';
+        document.getElementById('link').value = '';
+    } catch (error) {
+        console.error('Error created link', error);
+    }
+}
+
+const deleteLink = async (linkId) => {
+    try {
+        await fetch(`${URL_SERVER}/links/${linkId}`, {
+            method: 'DELETE'
+        })
+
+        await getLinks();
+    } catch (error) {
+        console.error('Error created link', error);
+    }
+}
+
+const editLink = async (linkId) => {
+    try {
+        window.location.href = URL_SERVER + `/edit.html?id=${linkId}`;
+    } catch (error) {
+        console.error('Error al editar el enlace', error);
+    }
+}
+
+const getLinks = async () => {
+    try {
+        const response = await fetch(`${URL_SERVER}/links`);
+        const { data } = await response.json();
+
+        const tbody = document.querySelector('#linksTable tbody');
+
+        tbody.innerHTML = '';
+
+        data?.forEach((link) => {
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+                <td>${link?.id}</td>
+                <td>$ ${link?.valueLink}</td>
+                <td>${link?.link}</td>
+                <td>
+                    <button class="btn btn-warning" onclick="editLink('${link.id}')">Editar</button>
+                    <button class="btn btn-danger" onclick="deleteLink('${link.id}')">Eliminar</button>
+                </td>
+            `;
+
+            tbody.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Error cargando los links ', error);
+    }
+}
+
+const getSetting = async () => {
+    try {
+        const response = await fetch(`${URL_SERVER}/links-mercado`);
+        const { data } = await response.json();
+
+        const withMercadoPagoCheck = document.getElementById('withMercadoPago');
+
+        withMercadoPagoCheck.checked = data?.isMercadoPago === 1 ? true : false;
+    } catch (error) {
+        console.error('Error get settings ', error);
+    }
+}
+
+const updateSetting = async () => {
+    try {
+        const checkedIsMercadoPago = document.getElementById('withMercadoPago').checked;
+
+        await fetch(`${URL_SERVER}/update-links-mercado`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ isMercadoPago: checkedIsMercadoPago })
+        })
+    } catch (error) {
+        console.error('Error updated setting', error);
     }
 }
 
 // Evento que se dispara cuando la conexión WebSocket está abierta
 socket.onopen = () => {
-    const nickname = localStorage.getItem('nickname'); 
+    const nickname = localStorage.getItem('nickname');
     socket.send(JSON.stringify({ nickname }));
 };

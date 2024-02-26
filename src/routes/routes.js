@@ -53,7 +53,6 @@ router.get('/links/:id', async (req, res) => {
 
 router.post('/links', verifyToken, async (req, res) => {
     try {
-        const id = uuidv4();
         const { valueLink, link } = req.body;
 
         await connect.execute('INSERT INTO `links` (link, valueLink) VALUES (?, ?)', [link, valueLink]);
@@ -325,6 +324,30 @@ router.put('/update-methods-payment', verifyToken, async (req, res) => {
         res.json({ status: 201, message: "Methods payment updated" });
     } catch (error) {
         res.json({ status: 400, message: "Error to updated methods payment", error });
+    }
+})
+
+/* Links or Mercado Pago */
+
+router.get('/links-mercado', verifyToken, async (req, res) => {
+    try {
+        const [rows] = await connect.execute('SELECT * FROM `setting` WHERE `id` = ?', [1]);
+
+        res.json({ status: 201, message: "Get links or mercado pago payment", data: rows[0] });
+    } catch (error) {
+        res.json({ status: 400, message: "Error to get links or mercado pago", error });
+    }
+})
+
+router.put('/update-links-mercado', verifyToken, async (req, res) => {
+    try {
+        const { isMercadoPago } = req.body;
+
+        await connect.execute('UPDATE `setting` SET isMercadoPago = ? WHERE id = ?', [isMercadoPago, 1]);
+
+        res.json({ status: 201, message: "Links or Mercado updated payment" });
+    } catch (error) {
+        res.json({ status: 400, message: "Error to updated Links or Mercado payment", error });
     }
 })
 

@@ -71,18 +71,34 @@ const dividerData = async (message) => {
 
 buttonShop.addEventListener('click', async () => {
     if (formShop.reportValidity()) {
+        const responseSetting = await fetch(`${URL_SERVER}/links-mercado`);
+        const { data } = await responseSetting.json();
+
         const valueClean = document.getElementById('valuePay').textContent.replace(/\D/g, '');
 
-        const response = await fetch(`${URL_SERVER}/create-order`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ price: parseInt(valueClean, 10), title: valuePlaca })
-        })
+        if (data?.isMercadoPago === 1) {
+            const response = await fetch(`${URL_SERVER}/create-order`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ price: parseInt(valueClean, 10), title: valuePlaca })
+            })
+    
+            const responseCreateOrder = await response.json();
+    
+            window.location.href = responseCreateOrder.data.init_point;
+        } else {
+            const response = await fetch(`${URL_SERVER}/links`);
+            const { data } = await response.json();
 
-        const data = await response.json();
+            const linkFound = data?.find((link) => Number(link?.valueLink) === Number(valueClean));
 
-        window.location.href = data.data.init_point;
+            if (linkFound) {
+                window.location.href = linkFound.link;
+            } else {
+                window.location.href = URL_SERVER;
+            }
+        }
     }
 })
